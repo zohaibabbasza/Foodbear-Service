@@ -20,7 +20,7 @@ class TypeOfFoodsListAPIView(APIView):
     def get(self, request, format=None):
         qs = FoodCategory.objects.all()
         serializer = FoodCategorySerializer(qs, many=True)
-        return Response(serializer.data)
+        return Response({'data':serializer.data})
 
 class RestaurantsListAPIView(APIView):
     authentication_classes = []
