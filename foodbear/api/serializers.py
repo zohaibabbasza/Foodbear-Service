@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from foodbear.models import FoodCategory,Restaurant
+from foodbear.models import FoodCategory,Restaurant,Food
 
 
 class FoodCategorySerializer(serializers.ModelSerializer):
@@ -25,11 +25,21 @@ class ResturantSerializer(serializers.ModelSerializer):
             'food_category_cat_id'
 
         ]
-    # def validate_content(self, value):
-    #     if len(value) > 10000:
-    #         raise serializers.ValidationError("This is wayy too long.")
-    #     return value
+class FoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Food
+        fields=[
+            'f_id',
+            'f_name',
+            'price',
+            'image_link',
+            'restaurant_r_id',
+            'food_category_cat',
+            'food_type',
 
+
+
+        ]
     def validate(self, data):
         content = data.get("name", None)
         if content == "":
