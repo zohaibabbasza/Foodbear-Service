@@ -7,6 +7,8 @@ from rest_framework.authentication import SessionAuthentication,TokenAuthenticat
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from foodbear.models import FoodCategory,Restaurant
+from django.http import HttpResponse,JsonResponse
+
 # from django.views.generic import View
 
 #from foodbear.models import Airline,Schedule
@@ -30,3 +32,10 @@ class RestaurantsListAPIView(APIView):
         qs = Restaurant.objects.all()
         serializer = ResturantSerializer(qs, many=True)
         return Response({'data':serializer.data})
+
+class ResturantFilterList(generics.ListAPIView):
+    serializer_class = ResturantSerializer
+
+    def get_queryset(self):
+        cat_id = self.kwargs['cat_id']
+        return Restaurant.objects.filter(food_category_cat_id=cat_id)
