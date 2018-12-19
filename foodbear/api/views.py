@@ -48,3 +48,9 @@ class FoodListAPIView(APIView):
         qs = Food.objects.all()
         serializer = FoodSerializer(qs, many=True)
         return Response({'data':serializer.data})
+class FoodFilterByResturants(generics.ListAPIView):
+    serializer_class = FoodSerializer
+
+    def get_queryset(self):
+        r_id = self.kwargs['r_id']
+        return Food.objects.filter(restaurant_r_id=r_id)
