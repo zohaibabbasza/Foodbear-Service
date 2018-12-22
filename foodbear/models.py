@@ -26,11 +26,11 @@ class Restaurant(models.Model):
     r_id = models.AutoField(primary_key=True)
     r_name = models.CharField(max_length=255)
     r_location = models.CharField(max_length=255)
-    r_image = models.CharField(max_length=255, blank=True, null=True)
     restaurant_packages_p = models.ForeignKey('RestaurantPackages', models.DO_NOTHING, db_column='Restaurant_Packages_p_id')  # Field name made lowercase.
     rating = models.IntegerField()
     date = models.DateTimeField(db_column='Date',auto_now=True)  # Field name made lowercase.
     food_category_cat = models.ForeignKey('FoodCategory', models.DO_NOTHING)
+    r_image = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -62,104 +62,6 @@ class User(models.Model):
         db_table = 'User'
 
 
-class AccountEmailaddress(models.Model):
-    email = models.CharField(unique=True, max_length=254)
-    verified = models.IntegerField()
-    primary = models.IntegerField()
-    user = models.ForeignKey('AuthUser', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'account_emailaddress'
-
-
-class AccountEmailconfirmation(models.Model):
-    created = models.DateTimeField()
-    sent = models.DateTimeField(blank=True, null=True)
-    key = models.CharField(unique=True, max_length=64)
-    email_address = models.ForeignKey(AccountEmailaddress, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'account_emailconfirmation'
-
-
-class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=80)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group'
-
-
-class AuthGroupPermissions(models.Model):
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
-
-
-class AuthPermission(models.Model):
-    name = models.CharField(max_length=255)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
-
-
-class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.IntegerField()
-    username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
-    is_staff = models.IntegerField()
-    is_active = models.IntegerField()
-    date_joined = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user'
-
-
-class AuthUserGroups(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
-
-
-class AuthUserUserPermissions(models.Model):
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
-
-
-class AuthtokenToken(models.Model):
-    key = models.CharField(primary_key=True, max_length=40)
-    created = models.DateTimeField()
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING, unique=True)
-
-    class Meta:
-        managed = False
-        db_table = 'authtoken_token'
-
-
 class Comment(models.Model):
     com_id = models.AutoField(primary_key=True)
     comment = models.CharField(max_length=255)
@@ -169,59 +71,6 @@ class Comment(models.Model):
     class Meta:
         managed = False
         db_table = 'comment'
-
-
-class DjangoAdminLog(models.Model):
-    action_time = models.DateTimeField()
-    object_id = models.TextField(blank=True, null=True)
-    object_repr = models.CharField(max_length=200)
-    action_flag = models.PositiveSmallIntegerField()
-    change_message = models.TextField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'django_admin_log'
-
-
-class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'django_content_type'
-        unique_together = (('app_label', 'model'),)
-
-
-class DjangoMigrations(models.Model):
-    app = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    applied = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_migrations'
-
-
-class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=40)
-    session_data = models.TextField()
-    expire_date = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_session'
-
-
-class DjangoSite(models.Model):
-    domain = models.CharField(unique=True, max_length=100)
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'django_site'
 
 
 class Food(models.Model):
@@ -249,10 +98,11 @@ class FoodCategory(models.Model):
 
 
 class Invoice(models.Model):
-    inv_id = models.AutoField(primary_key=True)
-    price = models.IntegerField()
-    delivery = models.CharField(max_length=255)
-    food_f = models.ForeignKey(Food, models.DO_NOTHING)
+    o_id = models.AutoField(primary_key=True)
+    quantity = models.IntegerField()
+    total_price = models.IntegerField()
+    invoice_inv = models.ForeignKey('Order', models.DO_NOTHING)
+    status = models.IntegerField()
 
     class Meta:
         managed = False
@@ -260,10 +110,12 @@ class Invoice(models.Model):
 
 
 class Order(models.Model):
-    o_id = models.AutoField(primary_key=True)
-    quantity = models.IntegerField()
-    total_price = models.IntegerField()
-    invoice_inv = models.ForeignKey(Invoice, models.DO_NOTHING)
+    inv_id = models.AutoField(primary_key=True)
+    price = models.IntegerField()
+    delivery = models.CharField(max_length=255)
+    food_f = models.ForeignKey(Food, models.DO_NOTHING)
+    user_u = models.ForeignKey(User, models.DO_NOTHING, db_column='User_u_id')  # Field name made lowercase.
+    payment_pay = models.ForeignKey('Payment', models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -273,7 +125,6 @@ class Order(models.Model):
 class Payment(models.Model):
     pay_id = models.AutoField(primary_key=True)
     pay_method = models.CharField(max_length=255)
-    invoice_inv = models.ForeignKey(Invoice, models.DO_NOTHING)
 
     class Meta:
         managed = False
