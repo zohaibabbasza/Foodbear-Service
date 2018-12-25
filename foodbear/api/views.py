@@ -63,3 +63,18 @@ class RestaurantCountView(APIView):
     def get(self, request, format=None):
         qs = Restaurant.objects.count()
         return Response([{'data':qs}])
+
+class CategoryCountView(APIView):
+    renderer_classes = (JSONRenderer, )
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        qs = FoodCategory.objects.count()
+        return Response([{'data':qs}])
+class FoodFilterById(generics.ListAPIView):
+    serializer_class = FoodSerializer
+
+    def get_queryset(self):
+        f_id = self.kwargs['f_id']
+        return Food.objects.filter(f_id=f_id)

@@ -12,3 +12,5 @@ admin.site.register(Comment)
 admin.site.register(PackageHistory)
 admin.site.register(Order)
 admin.site.register(Payment)
+
+admin.site.site_header='Foodbear Administration'
